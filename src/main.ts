@@ -80,10 +80,9 @@ import { ShockwaveFilter } from "pixi-filters";
   });
 
   const shockwaveFilter = new ShockwaveFilter({
-    //center: { x: app.screen.width / 2, y: app.screen.height / 2 },
     center: {
       x: Math.random() * app.screen.width,
-      y: Math.random() * app.screen.height
+      y: Math.random() * app.screen.height,
     },
     speed: 200.0,
     amplitude: 40.0,
@@ -95,8 +94,8 @@ import { ShockwaveFilter } from "pixi-filters";
 
   container.filters = [displacementFilter, shockwaveFilter];
 
-  console.log(shockwaveFilter.time);
-  shockwaveFilter.time = 0;
+  // console.log(shockwaveFilter.time);
+  shockwaveFilter.time = 100;
   // Add container to stage
   app.stage.addChild(container);
 
@@ -108,13 +107,18 @@ import { ShockwaveFilter } from "pixi-filters";
       displacementSprite.x = 0;
     }
 
-    shockwaveFilter.time += ticker.deltaTime * 0.05;
-    if (shockwaveFilter.time > 4.7) {
-      shockwaveFilter.time = 0;
-      shockwaveFilter.center = {
-        x: Math.random() * app.screen.width,
-        y: Math.random() * app.screen.height,
-      };
+    // Let shockwave animate over time only if active
+    if (shockwaveFilter.time < 4.7) {
+      shockwaveFilter.time += ticker.deltaTime * 0.05;
     }
+  });
+
+  window.addEventListener('click', (e) => {
+    const x = e.pageX;
+    const y = e.pageY;
+
+    shockwaveFilter.center.x = x;
+    shockwaveFilter.center.y = y;
+    shockwaveFilter.time = 0;
   });
 })();
